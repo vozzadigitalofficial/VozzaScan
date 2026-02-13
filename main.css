@@ -1,28 +1,248 @@
+/* * VOZZASCAN PRO - PREMIUM CSS ARCHITECTURE
+ * Brand: Vozza Digital
+ * Focus: High Accessibility, Enterprise Aesthetic, Responsive Design
+ */
+
 :root {
-    --primary: #2563EB; --primary-hover: #1D4ED8;
-    --bg: #F8FAFC; --card: #FFFFFF; --text: #0F172A;
-    --border: #E2E8F0; --radius: 16px;
+    /* Color Palette */
+    --primary-hex: #2563EB;
+    --primary: var(--primary-hex);
+    --primary-hover: #1D4ED8;
+    --primary-light: rgba(37, 99, 235, 0.1);
+    
+    /* Neutral Palette */
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --text-main: #0F172A;
+    --text-muted: #64748B;
+    --border: #E2E8F0;
+    
+    /* Functional Colors */
+    --success: #059669;
+    --accent-purple: #7C3AED;
+    --danger: #EF4444;
+    
+    /* Layout & Shadow */
+    --radius-full: 9999px;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+    
+    /* Animation */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Dark Mode Overrides */
 [data-theme="dark"] {
-    --bg: #020617; --card: #0F172A; --text: #F8FAFC; --border: #1E293B;
+    --bg: #020617;
+    --card: #0F172A;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border: #1E293B;
+    --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.3);
 }
-body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; transition: 0.3s; }
-.nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-.logo { font-weight: 800; font-size: 1.3rem; letter-spacing: -1px; }
-.logo span { color: var(--primary); }
-.app-container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
-.text-gradient { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.workspace-grid { display: grid; grid-template-columns: 380px 1fr; gap: 2rem; }
-.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
-.drop-zone { border: 2px dashed var(--border); height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
-textarea { width: 100%; height: 350px; border: none; background: transparent; color: var(--text); font-family: inherit; font-size: 1rem; resize: none; outline: none; margin-top: 1rem; }
-.analysis-panel { background: var(--bg); padding: 1rem; border-radius: 12px; margin: 10px 0; border-left: 4px solid var(--primary); }
-.keyword-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
-.tag { background: var(--card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
-.btn-primary { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 700; }
-.btn-upgrade { background: #F59E0B; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; }
-.progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.3s; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal-card { background: var(--card); padding: 2rem; border-radius: 20px; width: 400px; text-align: center; }
-.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-.hidden { display: none !important; }
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease;
+}
+
+/* Accessibility Focus */
+*:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 4px;
+}
+
+/* Typography Gradient */
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Navigation Bar */
+.navbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+/* Main Content Area */
+.app-container {
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.app-header h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.05em;
+    margin-bottom: 1rem;
+}
+
+/* Workspace Layout */
+.workspace-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* Premium Card Style */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-premium);
+    transition: var(--transition);
+}
+
+/* Professional Drop Zone */
+.drop-zone {
+    border: 2px dashed var(--border);
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: 4rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.drop-zone:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    transform: translateY(-8px);
+}
+
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Result Editor */
+textarea {
+    width: 100%;
+    min-height: 500px;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    resize: vertical;
+    box-shadow: var(--shadow-premium);
+    transition: border-color 0.2s;
+}
+
+textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* Premium Buttons */
+.btn-primary {
+    background: var(--primary);
+    color: #FFFFFF;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+}
+
+/* Responsive Grid */
+@media (max-width: 1024px) {
+    .workspace-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .app-header h1 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Status Indicator */
+.badge-status {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+}

@@ -3,126 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VozzaScan Pro | Powered by Vozza Digital</title>
     
-    <title>VozzaScan Pro | AI Document Engine</title>
-    <meta name="title" content="VozzaScan Pro | AI Document Engine">
-    <meta name="description" content="Ekstraksi teks cerdas dengan privasi total. Dibangun oleh Vozza Digital untuk produktivitas modern tanpa batas.">
-
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="VozzaScan Pro | Smart AI Extraction">
-    <meta property="og:description" content="Solusi baca dokumen cerdas dari Vozza Digital. 100% privat, aman, dan tanpa jejak.">
-    <meta property="og:image" content="banner.jpg">
-    <meta property="og:image:width" content="1024">
-    <meta property="og:image:height" content="1024">
-
-    <link rel="stylesheet" href="css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <script src="https://unpkg.com/tesseract.js@v4.0.1/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563EB; --primary-hover: #1D4ED8;
+            --bg: #F8FAFC; --card: #FFFFFF; --text: #0F172A;
+            --border: #E2E8F0; --radius: 20px; --shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] {
+            --bg: #020617; --card: #0F172A; --text: #F8FAFC; --border: #1E293B;
+        }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; transition: 0.3s; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Logo SVG Styling */
+        .brand-wrapper { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+        .brand-logo-svg { width: 32px; height: 32px; fill: var(--primary); }
+        .logo-text { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
+        .logo-text span { color: var(--primary); }
+
+        .workspace-grid { display: grid; grid-template-columns: 380px 1fr; gap: 2.5rem; max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .drop-zone { 
+            border: 2px dashed var(--border); border-radius: var(--radius); padding: 3.5rem 1.5rem; 
+            text-align: center; background: var(--card); cursor: pointer; transition: 0.3s; box-shadow: var(--shadow);
+        }
+        .drop-zone:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .icon-circle { width: 70px; height: 70px; background: rgba(37,99,235,0.1); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; }
+        textarea { 
+            width: 100%; height: 500px; padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border); 
+            background: var(--card); color: var(--text); font-family: inherit; resize: none; box-shadow: var(--shadow); font-size: 1rem; 
+        }
+        .btn-premium { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .hidden { display: none !important; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .modal-card { background: var(--card); padding: 2.5rem; border-radius: var(--radius); width: 400px; text-align: center; }
+        @media (max-width: 900px) { .workspace-grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
+
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">VOZZA<span>SCAN</span></div>
-            <div class="nav-right">
-                <div id="plan-badge" class="badge badge-lite">LITE</div>
-                <button id="btn-theme-toggle" class="btn-icon">🌙</button>
-                <button id="btn-upgrade" class="btn-upgrade">Upgrade Layanan</button>
+            <div class="brand-wrapper">
+                <svg class="brand-logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" />
+                    <path d="M2 17L12 22L22 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M2 12L12 17L22 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="logo-text">VOZZA<span>SCAN</span></div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center;">
+                <div id="plan-badge" style="background:var(--primary); color:white; padding:5px 15px; border-radius:20px; font-weight:800; font-size:0.75rem;">LITE</div>
+                <button id="btn-theme-toggle" class="btn-premium" style="background:var(--border); color:var(--text)">🌙</button>
+                <button id="btn-upgrade" class="btn-premium">Upgrade</button>
             </div>
         </div>
     </nav>
 
-    <main class="app-container">
-        <header class="app-header">
-            <div class="badge-status">SISTEM SIAP v1.0.0</div>
-            <h1>Smart Extraction. <span class="text-gradient">Zero Trace.</span></h1>
-            <p>Dibangun oleh Vozza Digital. Data Anda diproses lokal dan tetap aman.</p>
-        </header>
-
-        <div class="workspace-grid">
-            <section class="upload-section">
-                <div class="card drop-zone" id="drop-zone">
-                    <input type="file" id="file-input" hidden accept="image/*">
-                    <div class="drop-zone-content">
-                        <div class="icon-circle">📂</div>
-                        <h3>Pilih Dokumen</h3>
-                        <p>Klik atau seret gambar ke sini</p>
-                    </div>
+    <main class="workspace-grid">
+        <section>
+            <div class="drop-zone" id="drop-zone" role="button" aria-label="Pilih dokumen" tabindex="0">
+                <input type="file" id="file-input" hidden accept="image/*">
+                <div class="icon-circle">📂</div>
+                <h3 style="margin:0">Pilih Dokumen</h3>
+                <p style="color:gray; font-size:0.9rem;">Standard Inklusif Vozza Digital</p>
+            </div>
+            <div id="process-card" class="hidden" style="margin-top:1.5rem;">
+                <p id="status-text" style="font-weight:bold;">Memproses Dokumen...</p>
+                <div style="height:8px; background:var(--border); border-radius:10px; overflow:hidden;">
+                    <div id="progress-bar" style="height:100%; background:var(--primary); width:0%; transition:0.3s;"></div>
                 </div>
+            </div>
+            <img id="img-preview" class="hidden" style="width:100%; margin-top:1.5rem; border-radius:15px; box-shadow:var(--shadow);">
+        </section>
 
-                <div id="process-card" class="card process-card hidden">
-                    <div class="process-info">
-                        <span id="status-text">Sedang membaca teks...</span>
-                        <span id="percent-text">0%</span>
-                    </div>
-                    <div class="progress-container">
-                        <div id="progress-bar" class="progress-fill"></div>
-                    </div>
-                </div>
-
-                <div class="card preview-card">
-                    <div class="card-label">PRATINJAU DOKUMEN</div>
-                    <div id="preview-wrapper">
-                        <img id="img-preview" class="hidden">
-                        <div id="preview-placeholder">Gambar muncul di sini</div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="editor-section">
-                <div class="card editor-card">
-                    <div class="editor-toolbar">
-                        <select id="lang-select" class="select-premium">
-                            <option value="ind+eng">Indo + English</option>
-                            <option value="eng">Pure English</option>
-                        </select>
-                        <div id="char-count" class="stats-pill">0 Karakter</div>
-                    </div>
-                    <textarea id="result-text" spellcheck="false" placeholder="Hasil pembacaan teks..."></textarea>
-                    
-                    <div id="analysis-panel" class="analysis-panel hidden">
-                        <div class="panel-header">✨ Kata Kunci Penting</div>
-                        <div id="keyword-container" class="keyword-tags"></div>
-                    </div>
-
-                    <div class="editor-actions">
-                        <div class="group">
-                            <button id="btn-copy" class="btn-action">Salin Teks</button>
-                            <button id="btn-refine" class="btn-action premium-feat">Refine (Pro)</button>
-                            <button id="btn-poetry" class="btn-action premium-feat">Poetry (Biz)</button>
-                        </div>
-                        <div class="group">
-                            <button id="btn-export-txt" class="btn-ghost">TXT</button>
-                            <button id="btn-export-pdf" class="btn-primary">Simpan PDF</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+        <section>
+            <textarea id="result-text" spellcheck="false" placeholder="Hasil ekstraksi teks akan muncul di sini..."></textarea>
+            <div id="analysis-panel" class="hidden" style="margin-top:1rem; padding:1.2rem; background:rgba(37,99,235,0.05); border-radius:15px;">
+                <strong>✨ Analisis Kata Kunci:</strong>
+                <div id="keyword-container" style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;"></div>
+            </div>
+            <div style="margin-top:1.5rem; display:flex; gap:12px; flex-wrap:wrap;">
+                <button id="btn-copy" class="btn-premium">Salin Teks</button>
+                <button id="btn-refine" class="btn-premium premium-feat" style="background:#059669">Refine (Pro)</button>
+                <button id="btn-poetry" class="btn-premium premium-feat" style="background:#7C3AED">Poetry (Biz)</button>
+            </div>
+        </section>
     </main>
 
     <div id="modal-license" class="modal-overlay hidden">
         <div class="modal-card">
-            <h2>Aktifkan VozzaScan Pro</h2>
-            <p>Masukkan kode lisensi untuk menikmati fitur permanen.</p>
-            <div class="license-info">
-                <span>Panduan Warna QR:</span>
-                <div class="dot" style="background:#2563EB"></div> #2563EB
-                <div class="dot" style="background:#FFFFFF; border:1px solid #ddd"></div> #FFFFFF
-            </div>
-            <input type="text" id="license-input" placeholder="VOZZA-PRO-XXXX-2026">
-            <div class="modal-btns">
-                <button id="btn-close-modal" class="btn-link">Batal</button>
-                <button id="btn-activate-submit" class="btn-primary">Aktivasi</button>
+            <h3>Aktivasi Layanan Pro</h3>
+            <p style="font-size:0.9rem; color:gray; margin-bottom:1rem;">Kirimkan <b>Device ID</b> ini ke admin Vozza Digital untuk mendapatkan lisensi Anda:</p>
+            <div id="display-device-id" style="background:var(--bg); padding:10px; font-family:monospace; font-weight:bold; margin-bottom:1.5rem; border-radius:10px; color:var(--primary); font-size:1.1rem;"></div>
+            <input type="text" id="license-input" placeholder="MASUKKAN KODE LISENSI" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); margin-bottom:1.5rem; text-align:center;">
+            <div style="display:flex; gap:12px;">
+                <button id="btn-close-modal" style="flex:1; background:none; border:none; cursor:pointer; font-weight:600; color:gray;">Batal</button>
+                <button id="btn-activate-submit" class="btn-premium" style="flex:2;">Aktivasi Sekarang</button>
             </div>
         </div>
     </div>
 
-    <script src="js/planEngine.js"></script>
-    <script src="js/license.js"></script>
-    <script src="js/analysis.js"></script>
-    <script src="js/ocr.js"></script>
-    <script src="js/app.js"></script>
+    <script>
+        const PLANS = {
+            LITE: { id: 'lite', name: 'LITE', features: ['ocr'] },
+            PRO: { id: 'pro', name: 'PRO', features: ['ocr', 'refine', 'analysis'] },
+            BIZ: { id: 'business', name: 'BUSINESS', features: ['ocr', 'refine', 'analysis', 'poetry'] }
+        };
+        let currentPlan = PLANS.LITE;
+
+        const LicenseSystem = {
+            _SALT: "VOZZA_ENGINE_2026", 
+            getDeviceID() {
+                let id = localStorage.getItem('vozza_device_id');
+                if (!id) {
+                    id = 'VZ-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                    localStorage.setItem('vozza_device_id', id);
+                }
+                return id;
+            },
+            validate(key) {
+                const k = key.trim().toUpperCase();
+                const devID = this.getDeviceID();
+                const parts = k.split('-');
+                if (parts.length !== 4) return null;
+                const [prefix, type, devPart, signature] = parts;
+                if (prefix !== 'VOZZA' || devPart !== devID) return null;
+                const expectedSign = btoa(this._SALT + devID + type).substr(0, 4).toUpperCase();
+                return signature === expectedSign ? (type === 'PRO' ? PLANS.PRO : (type === 'BIZ' ? PLANS.BIZ : null)) : null;
+            }
+        };
+
+        const OCRCore = {
+            async extract(file, onProgress) {
+                const worker = await Tesseract.createWorker({ logger: m => { if(m.status === 'recognizing text') onProgress(m.progress); } });
+                await worker.loadLanguage('ind+eng');
+                await worker.initialize('ind+eng');
+                const { data: { text } } = await worker.recognize(file);
+                await worker.terminate();
+                return text;
+            },
+            refine(text) { return text.replace(/\s+/g, ' ').replace(/([.?!])([A-Z])/g, '$1 $2').trim(); }
+        };
+
+        const AnalysisEngine = {
+            analyze(text) {
+                const words = text.toLowerCase().match(/\w+/g).filter(w => w.length > 5);
+                const counts = {};
+                words.forEach(w => counts[w] = (counts[w] || 0) + 1);
+                return Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 5).map(e => e[0]);
+            },
+            poetry(text) { return text.split(/[.?!]/).map(s => s.trim()).filter(s => s).join('\n'); }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedID = localStorage.getItem('vozza_p_id');
+            if (savedID && PLANS[savedID.toUpperCase()]) currentPlan = PLANS[savedID.toUpperCase()];
+            
+            const syncUI = () => {
+                document.getElementById('plan-badge').textContent = currentPlan.name;
+                document.getElementById('display-device-id').textContent = LicenseSystem.getDeviceID();
+                document.querySelectorAll('.premium-feat').forEach(btn => {
+                    const feat = btn.id === 'btn-refine' ? 'refine' : 'poetry';
+                    btn.style.opacity = currentPlan.features.includes(feat) ? '1' : '0.3';
+                    btn.style.cursor = currentPlan.features.includes(feat) ? 'pointer' : 'not-allowed';
+                });
+                if (currentPlan.id !== 'lite') document.getElementById('btn-upgrade').classList.add('hidden');
+            };
+            syncUI();
+
+            const dom = {
+                dropZone: document.getElementById('drop-zone'),
+                fileInput: document.getElementById('file-input'),
+                result: document.getElementById('result-text'),
+                progress: document.getElementById('progress-bar'),
+                preview: document.getElementById('img-preview'),
+                processCard: document.getElementById('process-card'),
+                modal: document.getElementById('modal-license')
+            };
+
+            dom.dropZone.onclick = () => dom.fileInput.click();
+            dom.fileInput.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                dom.preview.src = URL.createObjectURL(file);
+                dom.preview.classList.remove('hidden');
+                dom.processCard.classList.remove('hidden');
+                try {
+                    const text = await OCRCore.extract(file, p => dom.progress.style.width = (p*100)+'%');
+                    dom.result.value = text;
+                    if (currentPlan.features.includes('analysis')) {
+                        const tags = AnalysisEngine.analyze(text);
+                        document.getElementById('analysis-panel').classList.remove('hidden');
+                        document.getElementById('keyword-container').innerHTML = tags.map(t => `<span style="background:white; border:1px solid var(--primary); padding:4px 10px; border-radius:8px; font-size:0.85rem; font-weight:600;">#${t}</span>`).join('');
+                    }
+                } catch(err) { alert("Gagal memproses gambar."); }
+                finally { dom.processCard.classList.add('hidden'); }
+            };
+
+            document.getElementById('btn-refine').onclick = () => {
+                if(currentPlan.features.includes('refine')) dom.result.value = OCRCore.refine(dom.result.value);
+                else dom.modal.classList.remove('hidden');
+            };
+
+            document.getElementById('btn-poetry').onclick = () => {
+                if(currentPlan.features.includes('poetry')) dom.result.value = AnalysisEngine.poetry(dom.result.value);
+                else dom.modal.classList.remove('hidden');
+            };
+
+            document.getElementById('btn-activate-submit').onclick = () => {
+                const plan = LicenseSystem.validate(document.getElementById('license-input').value);
+                if (plan) {
+                    localStorage.setItem('vozza_p_id', plan.id);
+                    location.reload();
+                } else { alert("Lisensi tidak valid untuk perangkat ini!"); }
+            };
+
+            document.getElementById('btn-upgrade').onclick = () => dom.modal.classList.remove('hidden');
+            document.getElementById('btn-close-modal').onclick = () => dom.modal.classList.add('hidden');
+            document.getElementById('btn-copy').onclick = () => { navigator.clipboard.writeText(dom.result.value); alert("Teks disalin!"); };
+            document.getElementById('btn-theme-toggle').onclick = () => {
+                const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', t);
+            };
+        });
+    </script>
 </body>
 </html>
